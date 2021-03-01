@@ -11,7 +11,7 @@ Activate the virtual environment using the command:
 work_env/Scripts/activate
 ```
 Make sure the path is selected properly. I am using VS Code. So I can check the
-settings.json file inside .vscode directory. If the path is correct, your 
+`settings.json` file inside `/.vscode` directory. If the path is correct, your 
 virtual environment should be running.
 
 Use the following command to download the necessary dependencies: 
