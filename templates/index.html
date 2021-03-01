@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Homepage</title>
+{% endblock %}
+
+{%block header%}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class="jumbotron text-center">
+    <h1 class="display-4">Pioneer Alpha</h1>
+    <p class="lead">License Plate Detection System</p>
+    <hr class="my-4">
+    <p>Select whether you want to run the license plate recognition on live video feed or upload your own video</p>
+    <a class="btn btn-info btn-md" href="/livefeed" role="button">Live Feed</a>
+    <a class="btn btn-info btn-md" href="#" role="button">Upload Video</a>
+</div>
+{% endblock %}
