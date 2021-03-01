@@ -1,3 +1,4 @@
+from detect import *
 import cv2
 import pickle
 
@@ -13,7 +14,7 @@ class VideoCamera(object):
 
     def get_frame(self):
         
-        detector = cv2.CascadeClassifier('work_env\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml')
+        detector = cv2.CascadeClassifier('..\work_env\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml')
         
         while True:
             success, image = self.imcap.read()
@@ -21,9 +22,12 @@ class VideoCamera(object):
             face = detector.detectMultiScale(image, 1.1, 7)
             for (x,y,w,h) in face:
                 cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,0),2)
-                # cv2.imwrite('results/test'+str(self.framecount)+'.jpg', image)
+                if self.framecount == 10:
+                    cv2.imwrite('results/test'+str(self.framecount)+'.jpg', image)
                 self.framecount+=1
 
+                if self.framecount == 10:
+                    result = detect()
             ret, jpeg = cv2.imencode('.jpg', image)
             data = []
             data.append(jpeg.tobytes())

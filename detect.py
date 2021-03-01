@@ -20,8 +20,8 @@ from utils.general import (
     xyxy2xywh, strip_optimizer, set_logging)
 
 class opt:
-    weights=['best.pt']
-    source='test/1 (1050).jpg'
+    weights=['yolov5s.pt']
+    source='results/'
     save_txt=True
     output='output'  # Output directory of the results
     classes=False
