@@ -18,6 +18,10 @@ Use the following command to download the necessary dependencies:
 ```
 pip install -r requirements.txt
 ```
+This will not install pytorch and torchvision. Because of dependency issues, we installed them separately. To install them use the following command: 
+```
+pip install torch==1.7.0+cpu torchvision==0.8.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+```
 Now run the web app using the command:
 ```
 python app.py
