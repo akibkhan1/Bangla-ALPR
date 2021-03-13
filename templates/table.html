@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Homepage</title>
+{% endblock %}
+
+{%block header%}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Pioneer Alpha</h1>
+    <p class="lead">License Plate Detection System</p>
+    <p>License Plate Database</p>
+</div>
+<div class="container">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">License Plate Number</th>
+                <th scope="col">Time</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in all_posts %}
+            <tr>
+                <th scope="row">{{ row.id }}</th>
+                <td>{{ row.plate_number }}</td>
+                <td>{{ row.time_stamp }}</td>
+                <td><a href="/table/delete/{{row.id}}"><button class="btn btn-danger" id="delete">X</button></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <a class="btn btn-info btn-md" href="/" role="button">Homepage</a>
+    <br>
+    <br>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Video Upload</title>
+<style type="text/css">
+    .jumbotron {
+        background-color: beige;
+    }
+</style>
+{% endblock %}
+
+{%block header%}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Pioneer Alpha</h1>
+    <p class="lead">License Plate Detection System</p>
+    <p>Select the video where you want to run the license plate recognition</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <form class="form-inline" action="/upload_video" method="POST" enctype="multipart/form-data">
+            <div class="form-group mb-2">
+                <label for="video"><h3 class="mb-4">Upload Video</h3></label>
+                <input type="file" class="form-control-file" name="video" id="video">
+            </div>
+            <button class="btn btn-success mt-5" type="submit">Upload</button>
+        </form>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-4"></div>
+        <a class="btn btn-info btn-md" href="/" role="button">Homepage</a>
+    </div>
+</div>
+{% endblock %}

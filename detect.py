@@ -1,3 +1,4 @@
+from torch._C import device
 from models import *  
 from utils.datasets import *
 from utils.torch_utils import select_device, load_classifier, time_synchronized
@@ -20,14 +21,14 @@ from utils.general import (
     xyxy2xywh, strip_optimizer, set_logging)
 
 class opt:
-    weights=['yolov5s.pt']
+    weights=['best-s.pt']
     source='results/'
     save_txt=True
     output='output'  # Output directory of the results
     classes=False
-    img_size=480    # Inference Imag Size
-    conf_thres=0.195
-    iou_thres=0.18
+    img_size=384    # Inference Imag Size
+    conf_thres=0.6
+    iou_thres=0.4
     fourcc='mp4v'
     half=False
     device=''
@@ -35,20 +36,35 @@ class opt:
     agnostic_nms=False
     augment=False
 
-def detect(save_img=False):
+def load_model():
     imgsz = opt.img_size 
     out, source, weights, view_img, save_txt = opt.output, opt.source, opt.weights, opt.view_img, opt.save_txt
-
     # Initialize
     set_logging()
     device = select_device(opt.device)
     if os.path.exists(out):
         shutil.rmtree(out)  # delete output folder
     os.makedirs(out)  # make new output folder
+    # half = device.type != 'cpu'  # half precision only supported on CUDA
+
+    #Load model
+    model = attempt_load(weights, map_location=device)  # load FP32 model
+    return model
+
+def detect(model,count):
+    imgsz = opt.img_size 
+    out, source, weights, view_img, save_txt = opt.output, opt.source, opt.weights, opt.view_img, opt.save_txt
+
+    # # Initialize
+    # set_logging()
+    device = select_device(opt.device)
+    # if os.path.exists(out):
+    #     shutil.rmtree(out)  # delete output folder
+    # os.makedirs(out)  # make new output folder
     half = device.type != 'cpu'  # half precision only supported on CUDA
 
     # Load model
-    model = attempt_load(weights, map_location=device)  # load FP32 model
+    # model = attempt_load(weights, map_location=device)  # load FP32 model
     imgsz = check_img_size(imgsz, s=model.stride.max())  # check img_size
     if half:
         model.half()  # to FP16
@@ -73,9 +89,9 @@ def detect(save_img=False):
     img = torch.zeros((1, 3, imgsz, imgsz), device=device)  # init img
     _ = model(img.half() if half else img.float()) if device.type != 'cpu' else None  # run once
 
-    results=[]
+    # results=[]
     res_crop=[]
-    count=0
+    # count = random.randint(0,100000)
     for path, img, im0s, vid_cap in dataset:
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
@@ -120,7 +136,7 @@ def detect(save_img=False):
                 ymax = []
                 scores = []
                 labels_value=[]
-                image_ids=[]
+                # image_ids=[]
                 # Write results
                 for *xyxy, conf, cls in det:
                     if save_txt:  # Write to file
@@ -136,9 +152,9 @@ def detect(save_img=False):
                         bx = int(int(xyxy[2]))
                         by = int(int(xyxy[3]))
                         crop_img = image[ty:by, tx:bx]
-                        filename = 'crop_results/'+str(count)+'-cropped.jpg'
+                        filename = 'static/images/'+str(count)+'-cropped.jpg'
                         cv2.imwrite(filename, crop_img)
-                        count=count+1
+                        # count=count+1
                         res_crop.append(crop_img)
                         
                         xmin.append(int(xyxy[0]))
@@ -149,7 +165,7 @@ def detect(save_img=False):
   
                         
                         scores.append(conf_score)
-                        image_ids.append(save_path)
+                        # image_ids.append(save_path)
 
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         with open(save_path[:save_path.rfind('.')] + '.txt', 'a') as file:
@@ -172,25 +188,25 @@ def detect(save_img=False):
             if save_img:
                 if dataset.mode == 'images':
                     cv2.imwrite(save_path, im0)
-        result = {
-            'image_id': image_ids,
-            'score': scores,
-            'class': labels_value,
-            'xmin': xmin,
-            'ymin': ymin,
-            'xmax': xmax,
-            'ymax': ymax
+        # result = {
+        #     # 'image_id': image_ids,
+        #     'score': scores,
+        #     'class': labels_value,
+        #     'xmin': xmin,
+        #     'ymin': ymin,
+        #     'xmax': xmax,
+        #     'ymax': ymax
 
-            }
+        #     }
         
-        results.append(result)
+        # results.append(result)
 
     if save_txt or save_img:
         print('Results saved to %s' % os.getcwd() + os.sep + out)
 
     print('Done. (%.3fs)' % (time.time() - t0))
     
-    return results
+    # return results
 
 
 # if __name__ == '__main__':
