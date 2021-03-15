@@ -10,7 +10,7 @@ import cv2
 
 app = Flask(__name__)
 
-app.config['VIDEO_UPLOADS'] = 'F:\\Contests, Codes and Assignments\\Pioneer Alpha\\Main Project\\yolov5\\static\\uploads\\'
+app.config['VIDEO_UPLOADS'] = 'static\\uploads\\'
 app.config['ALLOWED_VIDEO_EXTENSIONS'] = ['mp4', 'avi', 'mov']
 
 def allowed_video(filename):
@@ -90,7 +90,7 @@ def delete(id):
 
 def text_feed():
     text = []
-    files = glob.glob('F:\Contests, Codes and Assignments\Pioneer Alpha\Main Project\yolov5\static\images\*')
+    files = glob.glob('static\images\*')
     if not files:
         text.append("No license plate detected yet")
     else:
