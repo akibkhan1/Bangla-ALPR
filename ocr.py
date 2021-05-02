@@ -16,6 +16,9 @@ def detectText(img):
 
     response = client.document_text_detection(image=image)
     texts = response.text_annotations
+    if not texts:
+        return 'Unreadable License Plate'
+        
     output=texts[0].description
 
     if response.error.message:

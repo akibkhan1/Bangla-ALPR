@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from webcam import VideoCamera
+from webcam2 import VideoCamera
 from ocr import *
 import glob
 import os
@@ -23,8 +23,6 @@ def allowed_video(filename):
         return True
     else:
         return False
-
-# text = "Loading"
 
 #database integration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///plates.db'
@@ -69,10 +67,8 @@ def upload_video():
 @app.route('/table')
 
 def view_history():
-    # if request.method == 'GET':
     all_posts = license_plates.query.order_by(license_plates.time_stamp).all()
     return render_template('table.html', all_posts=all_posts)
-    # return render_template('table.html')
 
 # @app.route('/livefeed')
 
@@ -90,30 +86,39 @@ def delete(id):
 
 def text_feed():
     text = []
-    files = glob.glob('static\images\*')
+    files = glob.glob('static\processed_images\*')
     if not files:
         text.append("No license plate detected yet")
     else:
         for f in files:
+            print(f)
             plate = detectText(f)
-            if len(plate) >= 21 and plate not in text:
-                first_part = plate[0:-6]
-                second_part = plate[-5:]
-                text.append(first_part + '-' + second_part)
+            print(plate)
+            # if len(plate) >= 21 and plate not in text:
+            #     first_part = plate[0:-6]
+            #     second_part = plate[-5:]
+            #     text.append(first_part + '-' + second_part)
+            #     print(first_part + '-' + second_part)
+            text.append(plate)
+    # if text:
+    #     last_plate = text[-1]
+    # else:
+    #     last_plate = 'Unreadable'
     
-    last_plate = text[-1]
-    print(last_plate)
-    
-    new_post = license_plates(plate_number=last_plate)
-    db.session.add(new_post)
-    db.session.commit()
+    # if not last_plate == 'Unreadable':
+    #     new_post = license_plates(plate_number=last_plate)
+    #     db.session.add(new_post)
+    #     db.session.commit()
 
-    cropped = os.listdir('static/images/')
-    last_image = cropped[-1]
-    last = 'static/images/'+str(last_image)
-    resized = cv2.imread(last)
-    resized = cv2.resize(resized, (640, 480))
-    cv2.imwrite(last, resized)
+    cropped = os.listdir('static/processed_images/')
+    if cropped:
+        last_image = cropped[-1]
+        last = 'static/processed_images/'+str(last_image)
+        resized = cv2.imread(last)
+        resized = cv2.resize(resized, (640, 480))
+        cv2.imwrite(last, resized)
+    else:
+        last = 'static/dummy.png'
 
     return jsonify(text=text, image=last)
 
@@ -121,7 +126,6 @@ def text_feed():
 
 def video_feed():
     filepath = request.args.get('filepath')
-    # print(filepath)
     return Response(gen(VideoCamera(filepath)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def gen(camera):
@@ -131,6 +135,8 @@ def gen(camera):
             frame = data[0]
             yield(b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+        else:
+            break
 
 if __name__ == "__main__":
     app.run(debug=True)

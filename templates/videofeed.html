@@ -50,12 +50,12 @@
                     console.log('In');
                     $("#plate_number").text(" ");
                     // console.log(data.text.length);
-                    // for(i=0;i<data.text.length;i++)
-                    // {
-                    //     string = data.text[i];
-                    //     $("#plate_number").append(string+'<br>');
-                    // }
-                    $("#plate_number").append(data.text[data.text.length-1]+'<br>');
+                    for(i=0;i<data.text.length;i++)
+                    {
+                        string = data.text[i];
+                        $("#plate_number").append(string+'<br>');
+                    }
+                    // $("#plate_number").append(data.text[data.text.length-1]+'<br>');
 				    $("#cropped").attr("src",data.image);
 				});
 			  });

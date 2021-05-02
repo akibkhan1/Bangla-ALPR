@@ -20,34 +20,38 @@ class VideoCamera(object):
 
     def get_frame(self):
         
-        # detector = cv2.CascadeClassifier('..\work_env\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml')
+        detector = cv2.CascadeClassifier('cascade_v1.xml')
 
         while True:
             success, image = self.imcap.read()
             # image = cv2.flip(image, 1)
-            # face = detector.detectMultiScale(image, 1.1, 7)
-            # for (x,y,w,h) in face:
-                # cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,0),2)
+            face = detector.detectMultiScale(image, 1.1, 7)
+            for (x,y,w,h) in face:
+                
                 # if self.framecount < 10:
+                if not image is None:
+                    cv2.imwrite('results/test'+str(self.framecount)+'.jpg', image)
+                    if not len(os.listdir('static/images/'))>=10:
+                        detect(self.model,self.framecount)
+                        self.framecount+=1
+                else:
+                    break
+
+                cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,0),2)
+
+            # if not self.framecount == 10:
+            #     detect(self.model,self.framecount)
+            
+            shutil.rmtree('results')
+            os.makedirs('results')
+            
+            # os.remove('results/test'+str(self.framecount)+'.jpg')
+
             if not image is None:
-                cv2.imwrite('results/test'+str(self.framecount)+'.jpg', image)
+                ret, jpeg = cv2.imencode('.jpg', image)
+                data = []
+                data.append(jpeg.tobytes())
             else:
                 break
-
-                # if self.framecount == 10:
-                    # result = detect()
-
-            if not len(os.listdir('static/images/'))>9:
-                detect(self.model,self.framecount)
-            
-            # shutil.rmtree('results')
-            # os.makedirs('results')
-            os.remove('results/test'+str(self.framecount)+'.jpg')
-
-
-            self.framecount+=1
-            ret, jpeg = cv2.imencode('.jpg', image)
-            data = []
-            data.append(jpeg.tobytes())
             
             return data

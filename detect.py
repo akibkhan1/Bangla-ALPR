@@ -27,7 +27,7 @@ class opt:
     output='output'  # Output directory of the results
     classes=False
     img_size=384    # Inference Imag Size
-    conf_thres=0.6
+    conf_thres=0.4
     iou_thres=0.4
     fourcc='mp4v'
     half=False
@@ -151,11 +151,12 @@ def detect(model,count):
                         ty = int(int(xyxy[1]))
                         bx = int(int(xyxy[2]))
                         by = int(int(xyxy[3]))
+                        area = (by-ty)*(bx-tx)
                         crop_img = image[ty:by, tx:bx]
-                        filename = 'static/images/'+str(count)+'-cropped.jpg'
-                        cv2.imwrite(filename, crop_img)
-                        # count=count+1
-                        res_crop.append(crop_img)
+                        if area > 5720:
+                            filename = 'static/images/'+str(count)+'-cropped.jpg'
+                            cv2.imwrite(filename, crop_img)
+                            res_crop.append(crop_img)
                         
                         xmin.append(int(xyxy[0]))
                         ymin.append(int(xyxy[1]))
