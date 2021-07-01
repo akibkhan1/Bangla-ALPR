@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>License Plate Detection</title>
+{% endblock %}
+
+{%block header%}
+
+<div class="container">
+    <h1 class="display-6">Pioneer Alpha</h1>
+    <p class="lead">License Plate Detection System</p>
+    <hr class="my-1">
+    <p>Detected license plates from uploaded video feed</p>
+    <a class="btn btn-info btn-md" href="/" role="button">Homepage</a>
+    <br>
+    <br>
+    <div class="row  row-cols-1 row-cols-md-3">
+        {% for plate_path in detected_plate_paths %}
+        <div class="col-4 mb-4">
+          <div class="card">
+            <img src={{plate_path}} class="card-img-top">
+            <div class="card-body">
+                <h6 id="plate_number">Click on results to show detected output</h6>
+                <a id="process_results" class="btn btn-success btn-md" href="#" role="button">Results</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+</div>
+
+{% endblock %}
+
+{%block script%} 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type=text/javascript>
+    console.log('Working')
+    $(function() {
+			  $('a#process_results').bind('click', function() {
+				$.getJSON('/text_feed', {},
+                function(data){
+                    console.log('In');
+                    $("#plate_number").text(" ");
+                    // console.log(data.text.length);
+                    for(i=0;i<data.text.length;i++)
+                    {
+                        string = data.text[i];
+                        $("#plate_number").append(string+'<br>');
+                    }
+                    // $("#plate_number").append(data.text[data.text.length-1]+'<br>');
+				    $("#cropped").attr("src",data.image);
+				});
+			  });
+			});
+</script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>License Plate Detection</title>
+{% endblock %}
+
+{%block header%}
+
+<div class="container">
+    <h1 class="display-6">Pioneer Alpha</h1>
+    <p class="lead">License Plate Detection System</p>
+    <hr class="my-1">
+    <p>Prediction on uploaded video feed</p>
+    <div class="row">
+        <div class="col-6">
+            <img src="{{ url_for('video_feed', filepath=filepath) }}" class="img-fluid rounded" alt="Responsive image">
+        </div>
+        <div class="col-5">
+            <img id="cropped" src="static/dummy.png" class="img-fluid rounded" alt="Cropped License Plate">
+            <br>
+            <br>
+            <!--h4>Results: </h4-->
+            <a id="process_results" class="btn btn-success btn-md" href="#" role="button">Results</a>
+            <br>
+            <br>
+            <h4 id="plate_number">Click on results to show detected output</h4>
+        </div>
+        <div class="col-1">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <a class="btn btn-info btn-md" href="/" role="button">Homepage</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{%block script%} 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type=text/javascript>
+    // console.log('Working')
+    $(function() {
+			  $('a#process_results').bind('click', function() {
+				$.getJSON('/text_feed', {},
+                function(data){
+                    console.log('In');
+                    $("#plate_number").text(" ");
+                    // console.log(data.text.length);
+                    for(i=0;i<data.text.length;i++)
+                    {
+                        string = data.text[i];
+                        $("#plate_number").append(string+'<br>');
+                    }
+                    // $("#plate_number").append(data.text[data.text.length-1]+'<br>');
+				    $("#cropped").attr("src",data.image);
+				});
+			  });
+			});
+</script>
+{% endblock %}

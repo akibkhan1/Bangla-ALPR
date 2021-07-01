@@ -20,6 +20,7 @@ class VideoCamera(object):
         self.framecount = 1
         self.platecount = 0
         self.model, self.classes, self.output_layers = self.load_yolo()
+        self.avg_fps = []
 
     def load_yolo(self):
         # net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")
@@ -75,7 +76,7 @@ class VideoCamera(object):
                 # print(filename)
                 if self.framecount - self.prev_framecount >= 48 or self.platecount == 0:
                     self.prev_framecount = self.framecount
-                    process_image(self.platecount)
+                    # process_image(self.platecount)
                     self.platecount += 1
                     # print(f"Plate number {self.platecount}")
                 cv2.imwrite(filename, crop_img)
@@ -87,6 +88,7 @@ class VideoCamera(object):
         detector = cv2.CascadeClassifier('cascade_v1.xml')
 
         while True:
+            start_time = time.time()
             _, frame = self.imcap.read()
             face = detector.detectMultiScale(image = frame, scaleFactor  = 1.1, minNeighbors = 10, minSize = (45, 45))
             self.framecount += 1
@@ -102,9 +104,13 @@ class VideoCamera(object):
                 data = []
                 data.append(jpeg.tobytes())
             else:
-                process_image(self.platecount)
+                # process_image(self.platecount)
+                print(f'Average FPS: {np.mean(np.array(self.avg_fps))}')
                 break
             
+            self.avg_fps.append(1.0 / (time.time() - start_time))
+            print("FPS: ", 1.0 / (time.time() - start_time)) # FPS = 1 / time to process loop
+
             return data
 
         self.imcap.release()

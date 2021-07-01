@@ -14,7 +14,7 @@ def recognize_plate(image):
     box = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
     # gray = cv2.cvtColor(box, cv2.COLOR_RGB2GRAY)
     # resize image to three times as large as original for better readability
-    gray = cv2.resize(box, None, fx = 3, fy = 3, interpolation = cv2.INTER_CUBIC)
+    gray = cv2.resize(box, None, fx = 8, fy = 8, interpolation = cv2.INTER_CUBIC)
     # perform gaussian blur to smoothen image
     blur = cv2.GaussianBlur(gray, (5,5), 0)
     #cv2.imshow("Gray", gray)
@@ -41,6 +41,7 @@ def recognize_plate(image):
     im2 = gray.copy()
     # create blank string to hold license plate number
     plate_num = ""
+    count = 1
     # loop through contours and find individual letters and numbers in license plate
     for cnt in sorted_contours:
         x,y,w,h = cv2.boundingRect(cnt)
@@ -70,6 +71,10 @@ def recognize_plate(image):
         # perform another blur on character region
         # print(cnt)
         # roi = cv2.medianBlur(roi, 5)
+        crop_img = im2[y-5:y+h+5, x-5:x+w+5]
+        filename = 'static/cropped_imgs/'+str(count)+'.jpg'
+        cv2.imwrite(filename, crop_img)
+        count += 1
         try:
             text = pytesseract.image_to_string(roi, lang='ben')
             # clean tesseract text by removing any unwanted blank spaces
@@ -87,7 +92,7 @@ def recognize_plate(image):
 
 if __name__ == '__main__':
 
-    image_directory = 'tesseract_test/download2.jpg'
+    image_directory = 'static/images/22.jpg'
 
     # files = sorted(glob.glob(image_directory), key=sort_function)
     # print(len(files))

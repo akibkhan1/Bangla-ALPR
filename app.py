@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from webcam2 import VideoCamera
+from webcam3 import VideoCamera
 from ocr import *
 import glob
 import os
@@ -76,6 +76,7 @@ def view_history():
 #     return render_template('videofeed.html')
 
 @app.route('/table/delete/<int:id>')
+
 def delete(id):
     post = license_plates.query.get_or_404(id)
     db.session.delete(post)
@@ -127,6 +128,12 @@ def text_feed():
 def video_feed():
     filepath = request.args.get('filepath')
     return Response(gen(VideoCamera(filepath)), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/plate_gallery')
+
+def plate_gallery():
+    detected_plate_paths = glob.glob('static/images/*jpg')
+    return render_template('plate_gallery.html', detected_plate_paths=detected_plate_paths)
 
 def gen(camera):
     while True:

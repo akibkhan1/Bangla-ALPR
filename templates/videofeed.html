@@ -15,24 +15,24 @@
         <div class="col-6">
             <img src="{{ url_for('video_feed', filepath=filepath) }}" class="img-fluid rounded" alt="Responsive image">
         </div>
-        <div class="col-5">
-            <img id="cropped" src="static/dummy.png" class="img-fluid rounded" alt="Cropped License Plate">
-            <br>
-            <br>
-            <!--h4>Results: </h4-->
-            <a id="process_results" class="btn btn-success btn-md" href="#" role="button">Results</a>
-            <br>
-            <br>
-            <h4 id="plate_number">Click on results to show detected output</h4>
-        </div>
-        <div class="col-1">
+        <div class="col-6">
             <br>
             <br>
             <br>
             <br>
             <br>
             <br>
-            <a class="btn btn-info btn-md" href="/" role="button">Homepage</a>
+            <br>
+            <h4 id="plate_number">
+                <a class="btn btn-success btn-md" href="/plate_gallery" role="button">Plate Gallery</a>
+                Visit Detected Plates Gallery
+            </h4>
+            <br>
+            <br>
+            <h4>
+                <a class="btn btn-info btn-md" href="/" role="button">Homepage</a>
+                Back to Homepage
+            </h4>
         </div>
     </div>
 </div>
