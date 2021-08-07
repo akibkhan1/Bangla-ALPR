@@ -15,13 +15,15 @@
     <br>
     <br>
     <div class="row  row-cols-1 row-cols-md-3">
-        {% for plate_path in detected_plate_paths %}
+        {% for plate_path in image_with_text.items() %}
         <div class="col-4 mb-4">
           <div class="card">
-            <img src={{plate_path}} class="card-img-top">
+            <img src={{plate_path[0]}} class="card-img-top">
             <div class="card-body">
-                <h6 id="plate_number">Click on results to show detected output</h6>
-                <a id="process_results" class="btn btn-success btn-md" href="#" role="button">Results</a>
+              <h6 id="plate_number">{{ plate_path[1] }}</h6>
+                <!-- <h6 id="plate_number">Click on results to show detected output</h6> -->
+              <a id="process_results" class="btn btn-success btn-md" href="#" role="button">Save</a>
+              <a id="process_results" class="btn btn-danger btn-md" href="#" role="button">Delete</a>
             </div>
           </div>
         </div>

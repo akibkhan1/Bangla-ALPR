@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from webcam3 import VideoCamera
+from CascadeSSD import VideoCamera
 from ocr import *
 import glob
 import os
@@ -129,12 +129,6 @@ def video_feed():
     filepath = request.args.get('filepath')
     return Response(gen(VideoCamera(filepath)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/plate_gallery')
-
-def plate_gallery():
-    detected_plate_paths = glob.glob('static/images/*jpg')
-    return render_template('plate_gallery.html', detected_plate_paths=detected_plate_paths)
-
 def gen(camera):
     while True:
         data = camera.get_frame()
@@ -144,6 +138,22 @@ def gen(camera):
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         else:
             break
+
+@app.route('/plate_gallery')
+
+def plate_gallery():
+    detected_plate_paths = glob.glob('static/images/*.jpg')
+    image_with_text = {}
+    image_with_text.clear()
+    for plate in detected_plate_paths:
+        image_with_text[plate] = get_text(plate)
+    return render_template('plate_gallery.html', image_with_text=image_with_text)
+
+def get_text(image_path):
+    if not image_path:
+        return "Image not found"
+    else:
+        return detectText(image_path)
 
 if __name__ == "__main__":
     app.run(debug=True)
