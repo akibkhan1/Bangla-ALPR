@@ -28,6 +28,7 @@ class VideoCamera(object):
         while True:
             start_time = time.time()
             ret, frame = self.imcap.read()
+            
             if not frame is None:
                 self.framecount += 1
 
@@ -96,7 +97,8 @@ class VideoCamera(object):
                             now = datetime.now()
                             current_time = now.strftime("%H-%M-%S")
                             filename = 'static/images/'+str(self.platecount)+'-'+str(i+1)+'-'+str(current_time)+'.jpg'
-                            cv2.imwrite(filename, detection)
+                            if detection.shape[0] != 0 and detection.shape[1] != 0 and detection.shape[2] != 0:
+                                cv2.imwrite(filename, detection)
                             i += 1
                         if i == 3:
                             break
@@ -118,7 +120,8 @@ class VideoCamera(object):
                             now = datetime.now()
                             current_time = now.strftime("%H-%M-%S")
                             filename = 'static/images/'+str(self.platecount)+'-'+str(i+1)+'-'+str(current_time)+'.jpg'
-                            cv2.imwrite(filename, detection)
+                            if detection.shape[0] != 0 and detection.shape[1] != 0 and detection.shape[2] != 0:
+                                cv2.imwrite(filename, detection)
                             i += 1
                         if i == 3:
                             break

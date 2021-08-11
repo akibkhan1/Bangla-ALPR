@@ -28,6 +28,7 @@ class VideoCamera(object):
         while True:
             start_time = time.time()
             _, frame = self.imcap.read()
+            
             if not frame is None:
                 self.framecount += 1
 

@@ -1,12 +1,16 @@
 from flask import Flask, render_template, request, redirect, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+# from Yolov3 import VideoCamera
+# from Yolov3Cascade import VideoCamera
 from CascadeSSD import VideoCamera
+# from SSD import VideoCamera
 from ocr import *
 import glob
 import os
 from werkzeug.utils import secure_filename
 import cv2
+import shutil
 
 app = Flask(__name__)
 
@@ -39,6 +43,9 @@ class license_plates(db.Model):
 @app.route('/')
 
 def index():
+    path = 'static/images'
+    shutil.rmtree(path)
+    os.mkdir(path)
     return render_template('index.html')
 
 @app.route('/upload_video', methods=['GET', 'POST'])
