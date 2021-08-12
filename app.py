@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 # from Yolov3 import VideoCamera
-# from Yolov3Cascade import VideoCamera
+# from CascadeYolov3 import VideoCamera
 from CascadeSSD import VideoCamera
 # from SSD import VideoCamera
 from ocr import *
