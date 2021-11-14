@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  license_plate_detection_flask:
+    container_name: license-plate-detection-flask
+    build:
+      context: .
+    restart: always
+    volumes:
+      - static:/static
+    ports:
+      - "5000:5000"
+
+volumes:
+  static:
