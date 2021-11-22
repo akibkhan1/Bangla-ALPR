@@ -1,15 +1,18 @@
-version: '3.8'
+version: '3.6'
 
 services:
   license_plate_detection_flask:
     container_name: license-plate-detection-flask
+    env_file:
+      - .env
     build:
       context: .
+    command: python app.py
     restart: always
     volumes:
       - static:/static
     ports:
-      - "5000:5000"
+      - "5001:5001"
 
 volumes:
   static:
